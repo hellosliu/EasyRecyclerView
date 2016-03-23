@@ -27,3 +27,23 @@ recylerView.showEmptyView(emptyView); //显示无数据view
 recylerView.showEmptyView(networkErrorView); //显示网络异常view
 
 ```
+####上拉加载更多,分页加载,使用LoadMoreRecylerView
+```java
+View header = layoutInflater.inflate(R.layout.view_customer_header, null);
+LoadMoreRecylerView recylerView = (LoadMoreRecylerView)findViewById(R.id.recycleview_loading);
+recylerView.setLayoutManager(new LinearLayoutManager(this));
+recylerView.addHeaderView(header);
+//设置加载更多监听
+recylerView.setOnRefreshListener(new OnRefreshListener() {
+  @Override
+  public void onRefresh() { //上拉loading
+    getMoreData();
+  }
+  @Override
+  public void onReload() {  //网络异常时,点击重新获取数据
+    getMoreData();
+  }
+});
+recylerView.setAdapter(adapter);
+```
+
