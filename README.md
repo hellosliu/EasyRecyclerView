@@ -47,3 +47,16 @@ recylerView.setOnRefreshListener(new OnRefreshListener() {
 recylerView.setAdapter(adapter);
 ```
 
+####更多操作
+设置加载中、网络异常、数据到底文字
+```java
+recylerView.setSampleLoadText("Loading...", "NetWork Error", "Data End");
+```
+自定义加载中、网络异常、数据到底显示view 
+```java
+recylerView.setCustomerLoadFooter(loadingView, networkErrorView, dataEndView);
+```
+
+###EasyRecyclerView觉得好用，请点上面星星
+
+
