@@ -5,21 +5,18 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.hellosliu.easyrecyclerview.listener.OnRefreshListener;
-import com.hellosliu.easyrecyclerview.weight.LoadingFooter;
+import com.hellosliu.easyrecyclerview.weight.SampleLoadingFooter;
 
-/**
- * Created by avgd on 2016/3/19.
- */
+
 public class LoadMoreRecylerView extends EasyRecylerView {
 
     private final static String TAG = "LoadMoreRecylerView";
 
-    private LoadingFooter footerView;;
+    private SampleLoadingFooter footerView;
+
 
     private OnRefreshListener onRefreshListener;
 
@@ -38,13 +35,21 @@ public class LoadMoreRecylerView extends EasyRecylerView {
         init();
     }
 
+    public void setCustomerLoadFooter(View loadingView, View networkErrorView, View dataEndView){
+        footerView.setView(loadingView, networkErrorView, dataEndView);
+    }
+
+    public void setSampleLoadText(String loadingText, String netWorkErrorText, String dataEndText){
+        footerView.setSampleText(loadingText, netWorkErrorText, dataEndText);
+    }
+
     public void setOnRefreshListener(OnRefreshListener onRefreshListener) {
         this.onRefreshListener = onRefreshListener;
     }
 
     private void init(){
-        footerView = new LoadingFooter(getContext());
-        footerView.setState(LoadingFooter.State.Normal);
+        footerView = new SampleLoadingFooter(getContext());
+        footerView.setState(SampleLoadingFooter.State.Normal);
         super.addFootView(footerView);
         addScrollListener();
     }
@@ -52,7 +57,6 @@ public class LoadMoreRecylerView extends EasyRecylerView {
 
     @Override
     public void addFootView(View view) {
-        //super.addFootView(view);
 
     }
 
@@ -75,14 +79,17 @@ public class LoadMoreRecylerView extends EasyRecylerView {
                 int visibleItemCount = layoutManager.getChildCount();
                 int totalItemCount = layoutManager.getItemCount();
 
-                Log.d(TAG, "====>visibleItemCount:" + visibleItemCount + "====>totalItemCount:" + totalItemCount
-                        + "====>lastVisibleItemPosition:" + lastVisibleItemPosition);
+                //Log.d(TAG, "====>visibleItemCount:" + visibleItemCount + "====>totalItemCount:" + totalItemCount
+                //        + "====>lastVisibleItemPosition:" + lastVisibleItemPosition);
 
                 if ((visibleItemCount > 0 && newState == RecyclerView.SCROLL_STATE_IDLE && (lastVisibleItemPosition) >= totalItemCount - 1)) {
-                    Log.d(TAG, "======>正在加载");
-                    //onLoadNextPage(recyclerView);
-                    footerView.setState(LoadingFooter.State.Loading);
-                    onRefreshListener.onRefresh();
+                    if(footerView.getState() == SampleLoadingFooter.State.TheEnd)
+                        return;
+                    footerView.setState(SampleLoadingFooter.State.Loading);
+                    footerView.setClickable(false);
+                    if(null != onRefreshListener) {
+                        onRefreshListener.onRefresh();
+                    }
                 }
 
 
@@ -96,27 +103,29 @@ public class LoadMoreRecylerView extends EasyRecylerView {
     }
 
     public void onRefreshComplete(){
-        footerView.setState(LoadingFooter.State.Normal);
+        footerView.setState(SampleLoadingFooter.State.Normal);
+        footerView.setClickable(false);
     }
 
-
     public void setDataEnd(){
-        footerView.setState(LoadingFooter.State.TheEnd);
+        footerView.setState(SampleLoadingFooter.State.TheEnd);
+        footerView.setClickable(false);
     }
 
     public void setNetWorkError(){
-        footerView.setState(LoadingFooter.State.NetWorkError);
-        footerView.setOnClickListener(onFooterViewReloadClickListener);
+        footerView.setState(SampleLoadingFooter.State.NetWorkError);
+        footerView.setOnClickListener(onFooterReloadClickListener);
+        footerView.setClickable(true);
     }
 
-    OnClickListener onFooterViewReloadClickListener = new OnClickListener() {
+    OnClickListener onFooterReloadClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            onRefreshListener.onReload();
+            if(null != onRefreshListener) {
+                footerView.setState(SampleLoadingFooter.State.Loading);
+                onRefreshListener.onReload();
+            }
         }
     };
-
-
-
 
 }

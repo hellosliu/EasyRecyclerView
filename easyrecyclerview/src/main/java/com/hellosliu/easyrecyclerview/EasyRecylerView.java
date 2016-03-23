@@ -2,28 +2,16 @@ package com.hellosliu.easyrecyclerview;
 
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.GridLayoutManager.DefaultSpanSizeLookup;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.GridLayout;
 
-import java.util.ArrayList;
 
-/**
- * Created by avgd on 2016/3/18.
- */
 public class EasyRecylerView extends RecyclerView {
-
-    //private ArrayList<View> mHeaderViews = new ArrayList<>();
-    //private ArrayList<View> mFootViews = new ArrayList<>();
-
-    private View mHeaderView;
+    private ViewInfo mHeaderViewInfo;
     private View mFooterView;
     private Adapter mAdapter;
-
-
+    private ViewInfo mEmptyViewInfo;
 
     public EasyRecylerView(Context context) {
         super(context);
@@ -55,11 +43,12 @@ public class EasyRecylerView extends RecyclerView {
     }
 
     public void addHeaderView(View view){
-
-        mHeaderView = view;
+        mHeaderViewInfo = new ViewInfo();
+        mHeaderViewInfo.type = ViewInfo.TYPE_NORMAL;
+        mHeaderViewInfo.view = view;
         if(mAdapter != null){
             if(!(mAdapter instanceof EasyAdapter)){
-                mAdapter = new EasyAdapter(mHeaderView, mFooterView, mAdapter);
+                mAdapter = new EasyAdapter(mHeaderViewInfo, mFooterView, mAdapter);
             }
         }
     }
@@ -68,22 +57,39 @@ public class EasyRecylerView extends RecyclerView {
         mFooterView = view;
         if(mAdapter != null){
             if(!(mAdapter instanceof EasyAdapter)){
-                mAdapter = new EasyAdapter(mHeaderView, mFooterView, mAdapter);
+                mAdapter = new EasyAdapter(mHeaderViewInfo, mFooterView, mAdapter);
             }
         }
     }
 
     @Override
     public void setAdapter(Adapter adapter) {
-        if (null == mHeaderView && null == mFooterView){
+
+        if (null == mHeaderViewInfo && null == mFooterView){
             super.setAdapter(adapter);
         }else {
-            adapter = new EasyAdapter(mHeaderView, mFooterView, adapter);
+            adapter = new EasyAdapter(mHeaderViewInfo, mFooterView, adapter);
             super.setAdapter(adapter);
         }
 
         mAdapter = adapter;
     }
 
+    public void showEmptyView(View view){
+        mEmptyViewInfo = new ViewInfo();
+        mEmptyViewInfo.type = ViewInfo.TYPE_EMPTY;
+        mEmptyViewInfo.view = view;
 
+        EasyAdapter emptyAdapter = new EasyAdapter(mEmptyViewInfo, null, null);
+
+        super.setAdapter(emptyAdapter);
+    }
+
+
+    public class ViewInfo{
+        public static final int TYPE_NORMAL = 0;
+        public static final int TYPE_EMPTY = 1;
+        public View view;
+        public int type;
+    }
 }

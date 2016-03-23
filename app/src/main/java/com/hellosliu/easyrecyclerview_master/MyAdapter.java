@@ -9,15 +9,12 @@ import android.widget.TextView;
 
 import java.util.List;
 
-/**
- * Created by avgd on 2016/3/18.
- */
-public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private List<String> mDatas;
     private Context mContext;
 
-    public TestAdapter(Context mContext, List<String> mDatas) {
+    public MyAdapter(Context mContext, List<String> mDatas) {
         this.mContext = mContext;
         this.mDatas = mDatas;
     }

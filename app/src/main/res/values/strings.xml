@@ -1,6 +1,13 @@
 <resources>
-    <string name="app_name">EasyRecyclerView-master</string>
+    <string name="app_name">EasyRecyclerView</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string name="headerfooter_view">HeaderAndFooter RecyclerView</string>
+    <string name="loading_view">Loading RecyclerView</string>
+
+    <string name="menu_switch_grid">Switch GridLayout</string>
+    <string name="menu_show_empty">Show Empty</string>
+    <string name="menu_show_networkerror">Show NetWork Error</string>
 </resources>
